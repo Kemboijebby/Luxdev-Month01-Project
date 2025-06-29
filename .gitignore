@@ -1,0 +1,35 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints
+
+# Virtual environment
+venv/
+env/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database files (if using SQLite)
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode / IDE files
+.vscode/
+.idea/
+
+# Data files (optional: if you don’t want to commit CSV exports)
+*.csv
+
+# Ignore secrets or credentials (just in case)
+secrets.json

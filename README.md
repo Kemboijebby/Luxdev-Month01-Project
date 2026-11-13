@@ -1,83 +1,79 @@
-# 📊 Northwind End-to-End Data Pipeline
+# Northwind API → PostgreSQL ETL & Power BI Analytics
 
----
+An end-to-end learning project that extracts operational data from the Northwind REST API, transforms nested JSON into analysis-ready pandas DataFrames, loads the results into PostgreSQL on Aiven, and explores the data with SQL and Power BI.
 
-## ✅ Project Goal
+## Architecture
 
-Build an **end-to-end data pipeline** that:
+```text
+Northwind REST API (7 resources)
+          |
+          v
+Python + Requests
+          |
+          v
+pandas transformation
+- flatten nested address fields
+- standardize column names
+- handle selected missing values
+- parse order dates
+          |
+          v
+PostgreSQL (Aiven) — sales schema
+          |
+          +------> SQL analysis
+          |
+          +------> Power BI report
+```
 
-- Extracts data from the **Northwind API**
-- Cleans and normalizes the data using **Python & pandas**
-- Loads cleaned data into a **relational database** (`northwind_dw` with a `sales` schema)
-- Connects to **Power BI** for live reporting and dashboarding
+## What is implemented
 
----
+- Extracts products, orders, customers, employees, suppliers, order details, and shippers from the API.
+- Flattens nested address and shipping-address structures.
+- Renames fields to consistent snake_case names.
+- Handles selected missing values and converts order date fields to datetime.
+- Loads products, orders, suppliers, customers, and shippers into PostgreSQL using SQLAlchemy and `DataFrame.to_sql()`.
+- Includes SQL queries for customer/order joins, shipper analysis, open and delayed orders, order counts, and freight analysis.
+- Includes a Power BI report file and dashboard screenshot.
 
-## 📌 Data Sources
+## Repository contents
 
-**API:** [Northwind REST API](https://northwind.vercel.app/)
+- `data_eng.ipynb` — API extraction, transformation, and PostgreSQL loading.
+- `custo-9.sql` — SQL analysis queries and a fact-view definition.
+- `Sales Analysis.pbix` — Power BI report.
+- `Dashboard Screenshot.png` — report preview.
+- `requirements.txt` — Python dependencies.
+- `.env.example` — safe template for database settings.
 
-**Tables used:**
-- `customers`
-- `orders`
-- `products`
-- `suppliers`
-- `shippers`
+## Setup
 
----
+1. Create a Python virtual environment.
+2. Install dependencies with `python -m pip install -r requirements.txt`.
+3. Copy `.env.example` to `.env` and add your own Aiven connection details.
+4. Load the environment variables in the notebook using `python-dotenv`.
+5. Run the notebook cells in order.
+6. Connect Power BI Desktop to PostgreSQL and refresh the report using your own connection settings.
 
-## 🔄 Key Steps
+## Environment variables
 
-### 1️⃣ Extraction
+The notebook reads `AIVEN_USER`, `AIVEN_PASSWORD`, `AIVEN_HOST`, `AIVEN_PORT`, and `AIVEN_DATABASE`.
 
-- Use **`requests`** to fetch JSON from API endpoints.
-- Store each endpoint’s response in a **separate pandas DataFrame**.
+Do not commit `.env` or paste database credentials into notebooks. Rotate any credential that has previously been committed.
 
-### 2️⃣ Cleaning
+## Important implementation notes
 
-- Normalize nested fields (e.g. `address` → `street`, `city`, `region`, etc.)
-- Rename columns to **snake_case**; make keys explicit (`id` → `customer_id`).
-- Handle missing data:
-  - Drop rows only if necessary.
-  - Fill `NaN` for optional fields like `region` or `postal_code` with `"N/A"`.
+- The notebook uses `to_sql(if_exists='replace')`, which replaces the target tables each time the load cells run. This is a full-refresh learning workflow, not an incremental production load.
+- The pipeline currently runs from a notebook and does not include a scheduler, automated retries, data contracts, or monitoring.
+- The SQL and dashboard assets demonstrate analysis workflows; no production service-level or business-impact metrics are claimed.
 
-### 3️⃣ Load
+## Next improvements
 
-- Create the **`northwind_dw`** database.
-- Create a **`sales`** schema for logical organization.
-- Push cleaned DataFrames to database tables with **`.to_sql()`** using `if_exists="replace"`.
+- Move extraction, transformation, and loading into reusable Python modules.
+- Add request timeouts, retries, API response validation, and structured logging.
+- Add schema constraints, primary/foreign keys, and row-count reconciliation.
+- Implement incremental loading and idempotent upserts.
+- Add automated data-quality tests and pipeline orchestration.
+- Document dashboard KPIs and provide reproducible screenshots.
 
-### 4️⃣ Validation
+## Technologies
 
-- Verify tables and columns in **DBeaver**.
-- Confirm keys align for joins (`customer_id`, `shipper_id`, `supplier_id`).
-
-### 5️⃣ Visualization
-
-- Connect **Power BI Desktop** to the database using the correct driver (e.g. PostgreSQL).
-- Build relationships in the Power BI **model view**.
-- Create interactive dashboards & visuals.
-
----
-
-## ⚙️ Tech Stack
-
-- **Python:** `requests`, `pandas`, `sqlalchemy`
-- **Database:** PostgreSQL (hosted on Aiven)
-- **DB Tool:** DBeaver
-- **BI Tool:** Power BI Desktop
-
----
-
-## ✅ Final Tables
-
-| Schema | Table Name |
-|--------|-------------|
-| `sales` | `customers` |
-| `sales` | `orders` |
-| `sales` | `products` |
-| `sales` | `suppliers` |
-| `sales` | `shippers` |
-
----
-**
+Python · Requests · pandas · SQLAlchemy · PostgreSQL · Aiven · SQL · Power BI

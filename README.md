@@ -2,6 +2,14 @@
 
 An end-to-end learning project that extracts operational data from the Northwind REST API, transforms nested JSON into analysis-ready pandas DataFrames, loads the results into PostgreSQL on Aiven, and explores the data with SQL and Power BI.
 
+## Dashboard preview
+
+![Northwind Sales Analysis dashboard](https://raw.githubusercontent.com/Kemboijebby/Luxdev-Month01-Project/main/Dashboard%20Screenshot.png)
+
+[Open the Power BI report file](https://github.com/Kemboijebby/Luxdev-Month01-Project/blob/main/Sales%20Analysis.pbix) · [Download the PBIX report](https://github.com/Kemboijebby/Luxdev-Month01-Project/raw/refs/heads/main/Sales%20Analysis.pbix)
+
+Open the downloaded `.pbix` file with **Power BI Desktop**. The report is a static project artifact; interactive exploration requires Power BI Desktop and a configured data connection if refresh is needed.
+
 ## Architecture
 
 ```text
